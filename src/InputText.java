@@ -13,13 +13,21 @@ public class InputText implements Iterable<TextWord>{
 	private List<TextWord> words = new ArrayList<>();
 	private WordDictionary dictionary;
 
-	private final String notWordCharacter = "([^a-zA-Z_0-9\\-]|\\s)";
-	private final String splitRegex = "((?<=" + notWordCharacter + ")|(?=" + notWordCharacter + "))";
+	// a non word character is any combination of character that doesn't include a letter
+	// this prevents the dictionary to look for things like spaces and numbers
+	private final String nonWordCharacter = "([^a-zA-Z_0-9\\-]|\\s)";
+	/* non capturing regex, this lets the non word characters in the text in order to be able to rebuild the text
+	 * as it is (with punctuations, line breaks, etc....
+	*/
+	private final String splitRegex = "((?<=" + nonWordCharacter + ")|(?=" + nonWordCharacter + "))";
 	
 	public InputText(File text) throws IOException {
 		parseTextFile(text);
 	}
 	
+	/*
+	 * parses the text file and separates the text into words and delimiters.
+	 * */
 	public void parseTextFile(File text) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(text));
 		String[] lineWords;
@@ -33,9 +41,14 @@ public class InputText implements Iterable<TextWord>{
 		br.close();
 	}
 
+	/*
+	 * using the parallelStream function, this method checks in parallel all the words in the text
+	 * and compares them to the dictionary
+	 * */
 	public void spellCheck() {
 		words.parallelStream().forEach(word -> {
 			String currentWord = word.getWord();
+			// only compare words
 			if(currentWord.matches(".*[a-zA-Z]{1,}.*"))
 				word.setValid(dictionary.spellCheck(currentWord));
 			if(word.isValid())
@@ -62,6 +75,10 @@ public class InputText implements Iterable<TextWord>{
 		fw.close();
 	}
 	
+	/*
+	 * if the user decides to separate a word in order to correct it (ex: word1word2 becomes "word1" and "word2")
+	 * we add the extra words to accomodate and correct each of them separately
+	 * */
 	public boolean wordCorrection(TextWord w, String correction) {
 		String[] correctedWords = correction.split(splitRegex);
 		Integer index = null;

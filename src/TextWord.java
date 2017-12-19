@@ -1,8 +1,13 @@
 
+/*
+ * Contains a word part or a separator from the text to correct.
+ * It keeps in memory the original word and the corrected replacement
+ * */
+
 public class TextWord {
 	private String word;
 	private String replacement;
-	private Boolean valid;
+	private Boolean valid;			// is true when the word is contained in the dictionary
 	
 	public TextWord(String word) {
 		this.word = word;

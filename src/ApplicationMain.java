@@ -40,40 +40,54 @@ public class ApplicationMain extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Spell Check");
         
+        // root of the scene
         VBox root = new VBox();
         primaryStage.setScene(new Scene(root, 1024, 768));
         
+        // contains the text, the dictionaray and their respective titles
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10,10,10,10));
         grid.setVgap(8);
         grid.setHgap(10);
         
+        //contains the text viewer and corrector
         ScrollPane editorScroll = new ScrollPane();
         editorScroll.setPadding(new Insets(10,10,10,10));
         editorScroll.prefHeightProperty().bind(primaryStage.heightProperty());
         editorScroll.prefWidthProperty().bind(primaryStage.widthProperty());
         
+        //contains the words that constitute the text
         VBox editor = new VBox();
         editor.prefHeightProperty().bind(editorScroll.heightProperty());
         editor.prefWidthProperty().bind(editorScroll.widthProperty());
         editor.setStyle("-fx-background-color: #FFFFFF;");
         
+        //displays the path to the currently opened text file
         Label inputTextPath = new Label("SpellCheck");
         inputTextPath.setFont(new Font("Arial", 15));
         
+        //displays the name of the currently opened dictionary
         Label dictionaryPath = new Label("Dictionary");
         dictionaryPath.setFont(new Font("Arial", 15));
         
+        //contains the list of words in the dictionary
         ScrollPane dictWordListScroll = new ScrollPane();
         dictWordListScroll.setPadding(new Insets(10,10,10,10));
         
+        //list containing the words of the dictionary
         VBox dictWordList = new VBox();
         dictWordList.setPrefWidth(200);
         
+        // individual chunks of text (words/delimiters)
         List<FlowPane> textChunks = new ArrayList<>();
         
+        // menu bar
         MenuBar menuBar = new MenuBar();
         
+        // file menu item
+        // Load Dictionary: loads a dictionary from a text file
+        // Load Text: loads a text to correct from a text file
+        // Load Save: saves the corrected text to a file
         Menu menuFile = new Menu("File");
         
         MenuItem loadDict = new MenuItem("Load Dictionary");
@@ -164,6 +178,9 @@ public class ApplicationMain extends Application {
         primaryStage.show();
     }
 	
+	/*
+	 * runs spell check on the text and builds the text using text chunks to deal with each individual mistake
+	 * */
 	private static void runSpellCheck(VBox root, List<FlowPane> textChunks, InputText inputText, WordDictionary dictionary) {
 		inputText.setDictionary(dictionary);
 		root.getChildren().removeAll(textChunks);
@@ -192,11 +209,10 @@ public class ApplicationMain extends Application {
 		root.getChildren().addAll(textChunks);
 	}
 	
-	/*private static List<FlowPane> runSpellCheck(InputText inputText, WordDictionary dictionary) {
-		
-		return lines;
-	}
-	*/
+	/*
+	 * Text control containing a misspelt word, contains the behavior dictating that clicking and correcting
+	 * would update the text
+	 * */
 	private static Text correctibleWord(TextWord word, VBox root, List<FlowPane> textChunks, InputText inputText, WordDictionary dictionary) {
 		final Text t = new Text(word.getWord());
 		t.setFill(Paint.valueOf("red"));
