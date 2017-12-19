@@ -1,0 +1,16 @@
+/* Set the background colors for all buttons and toggle buttons */
+.html-editor 
+{
+	-fx-font: 12 cambria;
+	-fx-border-color: blue; 
+	-fx-border-style: solid;
+	-fx-border-width: 2;	
+}
+
+.tool-bar
+{
+	-fx-min-height: 0;
+	-fx-pref-height: 0;
+	-fx-max-height: 0;
+	visibility:hidden;
+}
