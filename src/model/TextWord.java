@@ -1,3 +1,4 @@
+package model;
 
 /*
  * Contains a word part or a separator from the text to correct.
